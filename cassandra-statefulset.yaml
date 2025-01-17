@@ -1,11 +1,13 @@
----
-apiVersion: "apps/v1beta1"
+apiVersion: "apps/v1"
 kind: StatefulSet
 metadata:
   name: cassandra
 spec:
   serviceName: cassandra
-  replicas: 1
+  replicas: 3
+  selector:    # Added this selector block
+    matchLabels:
+      app: cassandra
   template:
     metadata:
       labels:
@@ -45,10 +47,8 @@ spec:
   volumeClaimTemplates:
     - metadata:
         name: cassandra-data
-        annotations:  # comment line if you want to use a StorageClass
-          # or specify which StorageClass
-          volume.beta.kubernetes.io/storage-class: ""   # comment line if you
-          # want to use a StorageClass or specify which StorageClass
+        annotations:
+          volume.beta.kubernetes.io/storage-class: ""
       spec:
         accessModes: ["ReadWriteOnce"]
         resources:
